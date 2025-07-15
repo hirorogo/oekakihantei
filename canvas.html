@@ -10,7 +10,8 @@
         padding: 2em;
       }
       canvas {
-        border: 1px solid #ccc;
+        border: 
+        1px solid #ccc;
         margin-bottom: 1em;
       }
       #result {
@@ -18,16 +19,20 @@
         margin-top: 1em;
         font-weight: bold;
       }
+       
     </style>
   </head>
   <body>
     <h1>お絵かき分類ゲーム</h1>
     <p>キャンバスに動物の絵を描いて、「分類する」を押すとAIが判定します。</p>
-
+            
     <canvas id="canvas" width="224" height="224"></canvas>
 <div>   
+    <input type="color" id = "color">
+
     <button onclick="clearCanvas()">クリア</button>
     <button onclick="predict()">分類する</button>
+
 </div>
 <ul id="resultList"></ul>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
@@ -50,7 +55,6 @@
         
         function drawstart(e) {
             drawing = true;
-            ctx.strokeStyle = '#000000';
             ctx.linewidth = 4;
             ctx.linecap = 'round';
             ctx.linejoin = 'round';
@@ -127,6 +131,12 @@ async function predict() {
     document.getElementById('resultList').appendChild(li);
   }
 }
+
+ const color = document.getElementById('color');
+  color.addEventListener('change', () => {
+    ctx.strokeStyle = color.value;
+  });
+
 
 </script>
   </body>
