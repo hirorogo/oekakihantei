@@ -27,8 +27,15 @@
     <canvas id="canvas" width="224" height="224"></canvas>
 <div>   
     <button onclick="clearCanvas()">クリア</button>
+    <button onclick="predict()">分類する</button>
 </div>
+<ul id="resultList"></ul>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+
     <script>
+
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d',{willReadFrequently: true});
         console.log(ctx);
@@ -48,8 +55,8 @@
             ctx.linecap = 'round';
             ctx.linejoin = 'round';
             const rect = canvas.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
     console.log(x, y);
 
   
@@ -73,6 +80,54 @@ function clearCanvas() {
 	// canvas要素と同じ大きさの矩形の範囲をクリアする
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
+const URL = 'https://teachablemachine.withgoogle.com/models/8uu43WuV7/';
+
+async function loadModel() {
+	// パスの設定
+	// model.json：AIの中身そのもの
+	// metadata.json：クラス名（ラベル）やデータ数など、AIの「定義書」
+	const modelURL = URL + 'model.json';
+  const metadataURL = URL + 'metadata.json';
+  
+  // TensorFlow.js の命令でモデルを読み込む（非同期処理）
+  model = await tmImage.load(modelURL, metadataURL);
+  
+  // 分類できるラベル数を取得
+  maxPredictions = model.getTotalClasses();
+  
+  console.log(model, maxPredictions);
+    const metadata = await fetch(metadataURL).then((res) => res.json());
+    console.log('モデル読み込み完了', metadata);
+}
+
+// 関数を実行する
+loadModel();
+async function predict() {
+	if (!model) {
+	  alert('モデルがまだ読み込まれていません');
+    return;
+  }
+	
+	const prediction = await model.predict(canvas);
+  console.log(prediction);
+  
+  // 前回の結果を消す
+  document.getElementById('resultList').innerHTML = '';
+
+  for (let i = 0; i < maxPredictions; i++) {
+	  
+	  // className: クラス名（例：禰󠄀豆子、炭治郎など）
+	  // probability: そのクラスである確率（0〜100%）
+    const className = prediction[i].className;
+    const probability = (prediction[i].probability * 100).toFixed(1);
+
+		// li タグでHTMLに結果を表示
+    const li = document.createElement('li');
+    li.textContent = `${className}：${probability}%`;
+    document.getElementById('resultList').appendChild(li);
+  }
+}
+
 </script>
   </body>
 </html>
