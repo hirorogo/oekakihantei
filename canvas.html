@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>「お絵かきツール」による分類</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2em;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        margin-bottom: 1em;
+      }
+      #result {
+        font-size: 1.2em;
+        margin-top: 1em;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>お絵かき分類ゲーム</h1>
+    <p>キャンバスに動物の絵を描いて、「分類する」を押すとAIが判定します。</p>
+
+    <canvas id="canvas" width="224" height="224"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+    </script>
+  </body>
+</html>
